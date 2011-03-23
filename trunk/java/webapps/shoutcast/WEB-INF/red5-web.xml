@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:lang="http://www.springframework.org/schema/lang"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                           http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-2.0.xsd">
+
+
+	
+	<bean id="placeholderConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	    <property name="location" value="/WEB-INF/red5-web.properties" />
+	</bean>
+
+	<bean id="web.context" class="org.red5.server.Context"
+		autowire="byType" />
+
+	<bean id="web.scope" class="org.red5.server.WebScope"
+		 init-method="register">
+		<property name="server" ref="red5.server" />
+		<property name="parent" ref="global.scope" />
+		<property name="context" ref="web.context" />
+		<property name="handler" ref="web.handler" />
+		<property name="contextPath" value="${webapp.contextPath}" />
+		<property name="virtualHosts" value="${webapp.virtualHosts}" />
+	        
+	</bean>
+	<bean id="web.handler" class="com.thebitstream.shoutcast.Application" >
+		<property name="allowPublish" value="${webapp.allowPublish}"/>
+		<property name="adminPass" value="${webapp.adminPass}"/>
+		<property name="playbackPort" value="${webapp.rtmpPort}"/>
+		<property name="serverPorts">
+      		<list>
+      		
+      		<!-- Example 1: acts as shoutcast server for encoders. port is the listen port + 1, "8001" rather than 8000 -->
+      		
+	    		<bean id="shoutcast.stream_1" class="com.thebitstream.shoutcast.StreamConfiguration">
+	                <property name="outputName" value="live" />
+	                <property name="port" value="8001" />
+	                <property name="password" value="changeme" />
+	        	</bean>
+ 				
+ 			<!-- Example 2: subscribes to external shoutcast stream. 
+ 			http://glb-stream15.streaming.init7.net:80/1/rsc_de/aacp_64
+ 			
+ 	    		
+ 	    			
+ 	    		<bean id="shoutcast.stream_2" class="com.thebitstream.shoutcast.StreamConfiguration">
+	                <property name="outputName" value="live2" />
+	                <property name="clientConnectionURL" value="http://glb-stream15.streaming.init7.net:80/1/rsc_de/aacp_64" />
+	                <property name="clientMode" value="true" />
+	                <property name="metaCharset" value="UTF-8" />
+	        	</bean>      	
+        		
+        	-->
+        	</list>
+        </property>	
+	</bean>
+</beans>

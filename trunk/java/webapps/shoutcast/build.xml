@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<project name="copySource" basedir="." default="copy">
+	
+	<target name="copy">	
+		<tstamp prefix="build">
+			<format property="TODAY" pattern="d-MMMM-yyyy" locale="en"/>
+		</tstamp>
+		
+		<copy todir="C:/redbroiler/red5/dist/webapps/shoutcast/">			
+					<fileset dir="C:/redbroiler/red5/webapps/shoutcast/"> 
+						<exclude name="build.xml" />
+						<exclude name="shoutcast.war"/>
+					</fileset>
+				</copy>
+		</target>
+	
+		<target name="war">	
+			<tstamp prefix="build">
+						<format property="TODAY" pattern="d-MMMM-yyyy" locale="en"/>
+					</tstamp>
+			<war destfile="shoutcast.war" webxml="WEB-INF/web.xml">
+			<fileset dir="."/>
+			<exclude name="build.xml" />
+			<manifest>
+				<attribute name="Built-By" value="Andy Shaules"/>
+				<attribute name="Built-On" value="${build.TODAY}"/>
+			</manifest>
+		</war>
+		
+		
+		
+	</target>
+	
+	
+	
+</project>
